@@ -21,7 +21,6 @@ setup(
     url="https://github.com/fracpete/redis_helper",
     classifiers=[
         'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: MIT License',
         'Topic :: Scientific/Engineering',
         'Programming Language :: Python :: 3',
     ],
