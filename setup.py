@@ -31,7 +31,7 @@ setup(
     packages=[
       'simple_redis_helper',
     ],
-    version="0.1.6",
+    version="0.1.7",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
     install_requires=[
