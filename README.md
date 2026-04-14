@@ -121,15 +121,14 @@ optional arguments:
 Listens to messages being broadcast on a Redis channel.
 
 ```
-usage: srh-listen [-h] [-H HOST] [-p PORT]
-                                  [--password PASSWORD]
-                                  [--password_env PASSWORD] [-d DB] -c CHANNEL
-                                  [-D] [-s] [-o DIR] [-f FORMAT]
+usage: srh-listen [-h] [-H HOST] [-p PORT] [--password PASSWORD]
+                  [--password_env PASSWORD] [-d DB] -c CHANNEL [-D] [-s]
+                  [-o DIR] [-f FORMAT] [-t SEC]
 
 Listens to the specified channel for messages to come through and outputs them
 on stdout if no output directory provided.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -H HOST, --host HOST  The redis server to connect to (default: localhost)
   -p PORT, --port PORT  The port the redis server is listening on (default:
@@ -156,6 +155,9 @@ optional arguments:
                         output_dir'), see: https://docs.python.org/3/library/d
                         atetime.html#strftime-and-strptime-format-codes
                         (default: %Y%m%d_%H%M%S.%f.dat)
+  -t SEC, --timeout SEC
+                        The timeout in seconds to use for the pubsub thread.
+                        (default: 0.01)
 ```
 
 ### Ping

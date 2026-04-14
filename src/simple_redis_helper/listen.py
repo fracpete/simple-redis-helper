@@ -8,6 +8,18 @@ from simple_redis_helper.utils import get_password
 DATETIME_FORMAT_URL = "https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes"
 
 
+class RedisInstance:
+    """
+    Dummy container object for Redis objects.
+    """
+    client: redis.Redis = None
+    pubsub: redis.client.PubSub = None
+
+
+instance = None
+""" global instance to prevent it from being closed while running in thread. """
+
+
 def main(args=None):
     """
     The main method for parsing command-line arguments and running the application.
@@ -29,6 +41,7 @@ def main(args=None):
     parser.add_argument('-s', '--convert_to_string', action='store_true', help='Whether to convert the message data to string (requires --data_only)')
     parser.add_argument('-o', '--output_dir', metavar='DIR', required=False, default=None, help='The directory to store the received messages/data in')
     parser.add_argument("-f", "--file_format", metavar="FORMAT", help="the format to use for the output files (when using '--output_dir'), see: %s" % DATETIME_FORMAT_URL, required=False, default="%Y%m%d_%H%M%S.%f.dat")
+    parser.add_argument('-t', '--timeout', metavar='SEC', required=False, default=0.01, type=float, help='The timeout in seconds to use for the pubsub thread.')
     parsed = parser.parse_args(args=args)
 
     # check output dir
@@ -43,8 +56,11 @@ def main(args=None):
     except Exception as e:
         raise Exception("Invalid timestamp format: %s\nSee: %s" % (parsed.file_format, DATETIME_FORMAT_URL)) from e
 
+    global instance
+
     # connect
-    r = redis.Redis(host=parsed.host, port=parsed.port, db=parsed.database, password=get_password(parsed))
+    instance = RedisInstance()
+    instance.client = redis.Redis(host=parsed.host, port=parsed.port, db=parsed.database, password=get_password(parsed))
 
     # handler for listening/outputting
     def anon_handler(message):
@@ -66,9 +82,9 @@ def main(args=None):
                     f.write(data)
 
     # subscribe and start listening
-    p = r.pubsub()
-    p.psubscribe(**{parsed.channel: anon_handler})
-    p.run_in_thread(sleep_time=0.001)
+    instance.pubsub = instance.client.pubsub()
+    instance.pubsub.psubscribe(**{parsed.channel: anon_handler})
+    instance.pubsub.run_in_thread(sleep_time=parsed.timeout)
 
 
 def sys_main():
