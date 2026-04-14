@@ -8,6 +8,7 @@ Changelog
 - `srh-listen` now uses a global object to retain the redis objects, avoiding `ValueError: I/O operation on closed file.`
 - `srh-listen` now has the parameter `-t/--timeout` for the thread timeout, default is now 0.01 instead of 0.001 to
   reduce CPU load
+- added `setuptools` as dependency
 
 
 0.1.6 (2024-02-27)

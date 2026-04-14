@@ -35,6 +35,7 @@ setup(
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
     install_requires=[
+        "setuptools",
         "redis",
     ],
     entry_points={
